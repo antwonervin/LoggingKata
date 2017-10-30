@@ -19,6 +19,12 @@ namespace LoggingKata
 
         public ITrackable Parse(string line)
         {
+            var cells = line.Split(','); 
+            if (cells.Length < 3)
+            {
+                Logger.Error("Much have at least 3 elements.");
+                    return null;
+            }
             //DO not fail if one record parsing fails, return null
             return null; //TODO Implement
         }
