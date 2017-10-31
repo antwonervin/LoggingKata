@@ -19,7 +19,7 @@ namespace LoggingKata
         {
             var path = Environment.CurrentDirectory + "\\Taco_Bell-US-AL-Alabama.csv";
 
-            if (args.Length == 0)
+            if (path.Length == 0)
             {
                 Console.WriteLine("You must provide a filename as an argument");
                 Logger.Fatal("Cannot import without filename specified as an argument");
@@ -42,10 +42,41 @@ namespace LoggingKata
             var parser = new TacoParser();
             Logger.Debug("Initialized our Parser");
 
-            var locations = lines.Select(line => parser.Parse(line));
+            var locations = lines.Select(line => parser.Parse(line))
+                .OrderBy(loc => loc.Location.Longitude)
+                .ThenBy(loc => loc.Location.Latitude)
+                .ToArray();
+                                                                        
+            ITrackable a = null;
+            ITrackable b = null;
+            double distance = 0;
 
             //TODO:  Find the two TacoBells in Alabama that are the furthurest from one another.
-            //HINT:  You'll need two nested forloops
+
+            foreach (var locA in locations)
+            {
+                var origin = new Coordinate {Latitude = locA.Location.Latitude,Longitude = locA.Location.Longitude};
+
+                foreach(var locB in locations)
+                {
+                    var destination = new Coordinate
+                    {
+                        Latitude = locB.Location.Latitude,
+                        Longitude = locB.Location.Latitude
+                    };
+
+                    var nDestination = GeoCalculator.GetDistance(origin, destination);
+                    
+                    if (nDestination > distance)
+                    {
+                        a = locA;
+                        b = locB;
+                        distance = nDestination;
+                    }
+                }
+            }
+            Console.WriteLine($"The two TacoBells that are furthest aprt are:{a.Name} and:{b.Name}.");
+            Console.WriteLine($"These two locations are:{distance} miles apart.");
 
         }
     }

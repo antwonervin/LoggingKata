@@ -20,15 +20,15 @@ namespace LoggingKata
 
         public ITrackable Parse(string line)
         {
-            var cells = line.Split(','); 
+            var cells = line.Split(',');
             if (cells.Length < 3)
             {
                 Logger.Error("Much have at least 3 elements.");
-                    return null;
+                return null;
             }
-            
-                double lon = 0;
-                double lat = 0;
+
+            double lon = 0;
+            double lat = 0;
             try
             {
                 Logger.Debug("Attempt Parsing Longitude");
@@ -41,23 +41,20 @@ namespace LoggingKata
             {
                 Logger.Error("Fail to parse the location", e);
                 Console.WriteLine(e);
-                    return null;
+                return null;
             }
             var tacoBell = new TacoBell
             {
                 Name = cells[2],
-                Location = new Point
-                {
-                    Longitude = lon,
-                    Latitude = lat
-                };
-                Logger.Info();
-            }
 
+                Location = new Point { Longitude = lon, Latitude = lat }
+            };
 
-
-            //DO not fail if one record parsing fails, return null
-            return null; //TODO Implement
+            Logger.Info("");
+            return tacoBell;
         }
-    }
+     
+         //TODO Implement
+        }
+
 }
